@@ -1,20 +1,30 @@
-version: "3.8"
 services:
-  rvc:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: rvc
+  rvc-base:
+    build: .
+    image: rvc-web:latest
+    container_name: rvc-cpu
     volumes:
-      - ./weights:/app/assets/weights
-      - ./opt:/app/opt
-      # - ./dataset:/app/dataset # you can use this folder in order to provide your dataset for model training
+      - .:/app
+      -  /media/ttd/TeamSpace/TTD-Space/applications/rvc-web/assets:/app/assets-remote
     ports:
-      - 7865:7865
+      - "7865:7866"
+    #command: "tail -f /dev/null"
+    environment:
+      - TZ=Asia/Shanghai
+      - LC_ALL=zh_CN.UTF-8
+      - LANG=zh_CN.UTF-8
+  rvc-gpu:
+    container_name: "rvc"
+    extends: rvc-base
+    shm_size: "16gb"
+    profiles:
+      - production
+    ports: !override
+      - "7866:7866"
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+              device_ids: [ "0" ]
+              capabilities: [ gpu ]

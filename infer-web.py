@@ -842,11 +842,12 @@ with gr.Blocks(title="RVC WebUI") as app:
                                 label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"),
                                 value=0,
                             )
-                            input_audio0 = gr.Textbox(
+                            input_audio0 = gr.File(
                                 label=i18n(
                                     "输入待处理音频文件路径(默认是正确格式示例)"
+                                    "输入待处理音频文件"
                                 ),
-                                placeholder="C:\\Users\\Desktop\\audio_example.wav",
+                                type="file",
                             )
                             file_index1 = gr.Textbox(
                                 label=i18n(
@@ -1609,9 +1610,9 @@ with gr.Blocks(title="RVC WebUI") as app:
                 gr.Markdown(traceback.format_exc())
 
     if config.iscolab:
-        app.queue(concurrency_count=511, max_size=1022).launch(share=True)
+        app.queue().launch(share=True)
     else:
-        app.queue(concurrency_count=511, max_size=1022).launch(
+        app.queue().launch(
             server_name="0.0.0.0",
             inbrowser=not config.noautoopen,
             server_port=config.listen_port,
