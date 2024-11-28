@@ -110,7 +110,7 @@ async def infer_vc(
     actor: str,
     index: int,
     # seed : int,
-    post_process: bool = False,
+    post_process: bool = True,
     file: UploadFile = File(...),
 ):
     time_start = time.time()
