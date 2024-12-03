@@ -6,7 +6,7 @@ services:
     volumes:
       - /TTD-Data/rvc-web/:/app/assets
     ports:
-      - "7867:7866"
+      - "7867:7865"
     #command: "tail -f /dev/null"
     environment:
       - TZ=Asia/Shanghai
@@ -26,7 +26,7 @@ services:
     profiles:
       - production
     ports: !override
-      - "7868:7866"
+      - "7868:7865"
     deploy: !override
       resources:
         reservations:
