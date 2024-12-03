@@ -23,7 +23,7 @@ RUN apt-get update && \
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
 
 #mount requirements.txt for best cache result
-RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \    
+RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt    
 RUN python3 -m pip install --upgrade pip==24.0
 RUN python3 -m pip install --no-cache-dir -r /tmp/requirements.txt
 
