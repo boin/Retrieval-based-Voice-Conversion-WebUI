@@ -160,6 +160,8 @@ class VC:
     ):
         if input_audio_path is None:
             return "You need to upload an audio", None
+        if type(input_audio_path) is not str:
+            input_audio_path = input_audio_path.name
         f0_up_key = int(f0_up_key)
         try:
             audio = load_audio(input_audio_path, 16000)
