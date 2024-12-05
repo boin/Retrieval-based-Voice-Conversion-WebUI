@@ -11,7 +11,7 @@ services:
     #command: "tail -f /dev/null"
     environment:
       - TZ=Asia/Shanghai
-      - LC_ALL=zh_CN.UTF-8
+      - LC_ALL=C.UTF-8
       - LANG=zh_CN.UTF-8
   rvc-gpu:
     container_name: "rvc"

@@ -7,6 +7,7 @@ import tempfile
 import time
 import warnings
 import wave
+import os
 from pathlib import Path
 
 import numpy as np
@@ -45,14 +46,22 @@ vc = VC(config)
 # cache remote pth to local for performance
 def load_pth(sid):
     local_pth = Path(f"./assets/weights/{sid}.pth")
-    if not local_pth.exists():
-        logger.info(f"Local cache for {sid}.pth not found.")
-        remote_pth = Path(f"./assets-remote/weights/{sid}.pth")
-        if remote_pth.exists():
-            shutil.copyfile(remote_pth, local_pth)
-            logger.info(f"Successfully cached {sid}.pth to local.")
-        else:
-            logger.warning(f"Remote file {sid}.pth does not exist. Unable to cache.")
+    remote_pth = Path(f"./assets-remote/weights/{sid}.pth")
+    # 检查本地文件是否存在
+    if local_pth.exists():
+        return sid + ".pth"
+    logger.warning(f"Local cache for {sid}.pth not found.")
+    # 检查远程文件是否存在
+    if not remote_pth.exists():
+        raise FileNotFoundError(
+            f"Remote file {sid}.pth does not exist. Unable to cache."
+        )
+    try:  # 尝试缓存文件
+        os.makedirs(local_pth.parent, exist_ok=True)
+        shutil.copyfile(remote_pth, local_pth)
+        logger.info(f"Successfully cached {sid}.pth to local.")
+    except Exception as e:
+        logger.exception(f"Failed to cache {sid}.pth to local: {e}")
     return sid + ".pth"
 
 
@@ -67,7 +76,7 @@ def do_post_process(audio: io.BytesIO) -> io.BytesIO:
         else:
             logger.error("Post process error:", response.json())
     except requests.exceptions.RequestException as e:
-        logger.error("Post Request failed: %s", str(e))
+        logger.exception("Post Request failed: %s", str(e))
         return audio
 
 
@@ -151,7 +160,7 @@ async def infer_vc(
                 )
 
     except Exception as e:
-        logger.error("vc task %s failed: ", e)
+        logger.exception("vc task %s failed: ", e)
         raise HTTPException(status_code=500, detail=str(e))
     if time.time() - time_start > 5:
         logger.warning(
