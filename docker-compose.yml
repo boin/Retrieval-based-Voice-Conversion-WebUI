@@ -5,7 +5,9 @@ services:
     container_name: rvc-3070
     volumes:
       - /TTD-Data/rvc-web/:/app/assets
+      - /TTD/04_应用/rvc-web/weights:/app/assets/weights
       - /TTD/04_应用/rvc-web/material:/app/material
+
     ports:
       - "7867:7865"
     #command: "tail -f /dev/null"
