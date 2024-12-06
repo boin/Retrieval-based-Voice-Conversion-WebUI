@@ -260,7 +260,7 @@ class VC:
             for path in paths:
                 info, opt = self.vc_single(
                     sid,
-                    path["path"],
+                    path["name"],
                     f0_up_key,
                     None,
                     f0_method,
