@@ -4,9 +4,10 @@ services:
     image: rvc-web:latest
     container_name: rvc-3070
     volumes:
-      - /TTD-Data/rvc-web/:/app/assets
-      - /TTD/04_应用/rvc-web/weights:/app/assets/weights
-      - /TTD/04_应用/rvc-web/material:/app/material
+      - /TTD-Data/rvc-web/:/app/assets # 预加载模型缓存路径
+      - /TTD/04_应用/rvc-web/weights:/app/assets/weights # 模型pth路径
+      - /TTD/04_应用/rvc-web/material:/app/material # 批量infer的输入路径
+      - /TTD/04_应用/rvc-web/outputs:/app/opt  # 批量infer的输出路径
     shm_size: "32gb"
     ports:
       - "7867:7865"
