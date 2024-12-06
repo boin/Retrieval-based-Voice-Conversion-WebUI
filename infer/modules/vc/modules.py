@@ -254,16 +254,13 @@ class VC:
                     paths = [
                         os.path.join(dir_path, name) for name in os.listdir(dir_path)
                     ]
-                else:
-                    paths = [path.name for path in paths]
-            except:
+            except: 
                 traceback.print_exc()
-                paths = [path.name for path in paths]
             infos = []
             for path in paths:
                 info, opt = self.vc_single(
                     sid,
-                    path,
+                    path["path"],
                     f0_up_key,
                     None,
                     f0_method,
@@ -276,6 +273,7 @@ class VC:
                     rms_mix_rate,
                     protect,
                 )
+                path = path["orig_name"].removesuffix(".wav") + "_VC"
                 if "Success" in info:
                     try:
                         tgt_sr, audio_opt = opt

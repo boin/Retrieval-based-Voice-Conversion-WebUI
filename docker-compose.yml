@@ -9,6 +9,7 @@ services:
       - /TTD/04_应用/rvc-web/material:/app/material # 批量infer的输入路径
       - /TTD/04_应用/rvc-web/outputs:/app/opt  # 批量infer的输出路径
     shm_size: "32gb"
+    init: True
     ports:
       - "7867:7865"
     #command: "tail -f /dev/null"

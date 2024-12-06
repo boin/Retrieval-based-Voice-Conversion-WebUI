@@ -1077,6 +1077,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     inputs = gr.File(
                         file_count="multiple",
                         label=i18n("也可批量输入音频文件, 二选一, 优先读文件夹"),
+                        preprocess=False
                     )
 
                 with gr.Row():
