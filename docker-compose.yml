@@ -26,8 +26,6 @@ services:
   rvc-gpu:
     container_name: "rvc-p5000"
     extends: rvc-base
-    profiles:
-      - production
     ports: !override
       - "7868:7865"
     deploy: !override
