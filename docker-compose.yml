@@ -4,10 +4,30 @@ services:
     image: rvc-web:latest
     container_name: rvc-3070
     volumes:
-      - /TTD-Data/rvc-web/:/app/assets # 预加载模型缓存路径
-      - /TTD/04_应用/rvc-web/weights:/app/assets/weights # 模型pth路径
-      - /TTD/04_应用/rvc-web/material:/app/material # 批量infer的输入路径
-      - /TTD/04_应用/rvc-web/outputs:/app/opt  # 批量infer的输出路径
+      - type: volume # 预加载模型缓存路径
+        source: TTD-Data
+        target: /app/assets
+        volume:
+          nocopy: true
+          subpath: rvc-web
+      - type: volume # 模型pth路径
+        source: TTD
+        target: /app/assets/weights
+        volume:
+          nocopy: true
+          subpath: 04_应用/rvc-web/weights
+      - type: volume # 批量infer的输入路径
+        source: TTD
+        target: /app/material
+        volume:
+          nocopy: true
+          subpath: 04_应用/rvc-web/material
+      - type: volume # 批量infer的输出路径
+        source: TTD
+        target: /app/opt
+        volume:
+          nocopy: true
+          subpath: 04_应用/rvc-web/outputs
     shm_size: "32gb"
     init: True
     ports:
@@ -23,7 +43,7 @@ services:
           devices:
             - driver: nvidia
               device_ids: [ "0" ]
-              capabilities: [ gpu ] 
+              capabilities: [ gpu ]
   rvc-gpu:
     container_name: "rvc-p5000"
     extends: rvc-base
@@ -36,3 +56,9 @@ services:
             - driver: nvidia
               device_ids: [ "1" ]
               capabilities: [ gpu ]
+
+volumes:
+  TTD-Data:
+    external: true
+  TTD:
+    external: true
