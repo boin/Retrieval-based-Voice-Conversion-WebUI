@@ -46,4 +46,4 @@ VOLUME [ "/app/weights", "/app/opt" ]
 
 COPY . /app
 
-CMD ["python3", "infer-web.py"]
+CMD ["python3", "infer-ttd.py"]
