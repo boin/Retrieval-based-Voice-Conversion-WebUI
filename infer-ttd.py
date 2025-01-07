@@ -168,6 +168,11 @@ def change_choices():
         "__type__": "update",
     }
 
+mix_names = []
+for name in os.listdir(weight_root):
+    if name.endswith(".pth"):
+        mix_names.append(name.removesuffix(".pth"))
+
 def change_mix_choices():
     names = []
     for name in os.listdir(weight_root):
@@ -969,7 +974,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     with gr.Column():
                         but0 = gr.Button(i18n("转换"), variant="primary")
                         with gr.Row():
-                            vc_output1 = gr.Textbox(label=i18n("输出信息"))
+                            vc_output1 = gr.Textbox(label=i18n("输出信息"), auto_scroll=True)
                             vc_output2 = gr.Audio(
                                 label=i18n("输出音频(右下角三个点,点了可以下载)")
                             )
@@ -1109,7 +1114,7 @@ with gr.Blocks(title="RVC WebUI") as app:
 
                 with gr.Row():
                     but1 = gr.Button(i18n("转换"), variant="primary")
-                    vc_output3 = gr.Textbox(label=i18n("输出信息"))
+                    vc_output3 = gr.Textbox(label=i18n("输出信息"), auto_scroll=True)
 
                     but1.click(
                         vc.vc_multi,
@@ -1183,7 +1188,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                             interactive=True,
                         )
                     but2 = gr.Button(i18n("转换"), variant="primary")
-                    vc_output4 = gr.Textbox(label=i18n("输出信息"))
+                    vc_output4 = gr.Textbox(label=i18n("输出信息"), auto_scroll=True)
                     but2.click(
                         uvr,
                         [
@@ -1253,7 +1258,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                         interactive=True,
                     )
                     but1 = gr.Button(i18n("处理数据"), variant="primary")
-                    info1 = gr.Textbox(label=i18n("输出信息"), value="")
+                    info1 = gr.Textbox(label=i18n("输出信息"), value="", auto_scroll=True)
                     but1.click(
                         preprocess_dataset,
                         [trainset_dir4, exp_dir1, sr2, np7],
@@ -1297,7 +1302,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                             visible=F0GPUVisible,
                         )
                     but2 = gr.Button(i18n("特征提取"), variant="primary")
-                    info2 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8)
+                    info2 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8, auto_scroll=True)
                     f0method8.change(
                         fn=change_f0_method,
                         inputs=[f0method8],
@@ -1402,7 +1407,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     but3 = gr.Button(i18n("训练模型"), variant="primary")
                     but4 = gr.Button(i18n("训练特征索引"), variant="primary")
                     but5 = gr.Button(i18n("一键训练"), variant="primary")
-                    info3 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=10)
+                    info3 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=10, auto_scroll=True)
                     but3.click(
                         click_train,
                         [
@@ -1450,7 +1455,6 @@ with gr.Blocks(title="RVC WebUI") as app:
                         info3,
                         api_name="train_start_all",
                     )
-
         with gr.TabItem(i18n("音色融合")):
             with gr.Group():
                 gr.Markdown(value=i18n("模型融合, 可用于测试音色融合"))
@@ -1458,7 +1462,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     with gr.Column():
                         ckpt_a = gr.Dropdown(
                             label=i18n("A模型路径"),
-                            choices=sorted(names),
+                            choices=sorted(mix_names),
                             interactive=True,
                         )
                         alpha_a = gr.Slider(
@@ -1471,7 +1475,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     with gr.Column():
                         ckpt_b = gr.Dropdown(
                             label=i18n("B模型路径"),
-                            choices=sorted(names),
+                            choices=sorted(mix_names),
                             interactive=True,
                         )
                         alpha_b = gr.Slider(
@@ -1484,7 +1488,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     with gr.Column():
                         ckpt_c = gr.Dropdown(
                             label=i18n("C模型路径"),
-                            choices=sorted(names),
+                            choices=sorted(mix_names),
                             interactive=True,
                         )
                         alpha_c = gr.Slider(
@@ -1497,7 +1501,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     with gr.Column():
                         ckpt_d = gr.Dropdown(
                             label=i18n("D模型路径"),
-                            choices=sorted(names),
+                            choices=sorted(mix_names),
                             interactive=True,
                         )
                         alpha_d = gr.Slider(
@@ -1540,7 +1544,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                         interactive=True,
                     )
                     but6 = gr.Button(i18n("融合"), variant="primary")
-                    info4 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8)
+                    info4 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8, auto_scroll=True)
                 but6.click(
                     merge4,
                     [
