@@ -2,6 +2,7 @@
 __pycache__
 /TEMP
 *.pyd
+*.pyi
 .venv
 /opt
 tools/aria2c/

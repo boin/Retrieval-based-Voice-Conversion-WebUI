@@ -830,8 +830,11 @@ def update_mix_name(
     返回:
     - 生成的名字字符串。
     """
-    name = f"{ckpt1.split('_')[-1]}_{alpha1}_"
-    name += f"{ckpt2.split('_')[-1]}_{alpha2}_"
+    name = ""
+    if ckpt1:
+        name += f"{ckpt1.split('_')[-1]}_{alpha1}_"
+    if ckpt2:
+        name += f"{ckpt2.split('_')[-1]}_{alpha2}_"
     if ckpt3:
         name += f"{ckpt3.split('_')[-1]}_{alpha3}_"
     if ckpt4:
@@ -880,7 +883,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                                     "输入待处理音频文件路径(默认是正确格式示例)"
                                     "输入待处理音频文件"
                                 ),
-                                type="file",
+                                type="filepath",
                             )
                             file_index1 = gr.Textbox(
                                 label=i18n(
@@ -974,7 +977,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     with gr.Column():
                         but0 = gr.Button(i18n("转换"), variant="primary")
                         with gr.Row():
-                            vc_output1 = gr.Textbox(label=i18n("输出信息"), auto_scroll=True)
+                            vc_output1 = gr.Textbox(label=i18n("输出信息"), autoscroll=True)
                             vc_output2 = gr.Audio(
                                 label=i18n("输出音频(右下角三个点,点了可以下载)")
                             )
@@ -1114,7 +1117,7 @@ with gr.Blocks(title="RVC WebUI") as app:
 
                 with gr.Row():
                     but1 = gr.Button(i18n("转换"), variant="primary")
-                    vc_output3 = gr.Textbox(label=i18n("输出信息"), auto_scroll=True)
+                    vc_output3 = gr.Textbox(label=i18n("输出信息"), autoscroll=True)
 
                     but1.click(
                         vc.vc_multi,
@@ -1188,7 +1191,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                             interactive=True,
                         )
                     but2 = gr.Button(i18n("转换"), variant="primary")
-                    vc_output4 = gr.Textbox(label=i18n("输出信息"), auto_scroll=True)
+                    vc_output4 = gr.Textbox(label=i18n("输出信息"), autoscroll=True)
                     but2.click(
                         uvr,
                         [
@@ -1258,7 +1261,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                         interactive=True,
                     )
                     but1 = gr.Button(i18n("处理数据"), variant="primary")
-                    info1 = gr.Textbox(label=i18n("输出信息"), value="", auto_scroll=True)
+                    info1 = gr.Textbox(label=i18n("输出信息"), value="", autoscroll=True)
                     but1.click(
                         preprocess_dataset,
                         [trainset_dir4, exp_dir1, sr2, np7],
@@ -1302,7 +1305,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                             visible=F0GPUVisible,
                         )
                     but2 = gr.Button(i18n("特征提取"), variant="primary")
-                    info2 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8, auto_scroll=True)
+                    info2 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8, autoscroll=True)
                     f0method8.change(
                         fn=change_f0_method,
                         inputs=[f0method8],
@@ -1407,7 +1410,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                     but3 = gr.Button(i18n("训练模型"), variant="primary")
                     but4 = gr.Button(i18n("训练特征索引"), variant="primary")
                     but5 = gr.Button(i18n("一键训练"), variant="primary")
-                    info3 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=10, auto_scroll=True)
+                    info3 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=10, autoscroll=True)
                     but3.click(
                         click_train,
                         [
@@ -1520,21 +1523,18 @@ with gr.Blocks(title="RVC WebUI") as app:
                         choices=["40k", "48k"],
                         value="48k",
                         interactive=True,
-                        scale=0,
                     )
                     if_f0_ = gr.Radio(
                         label=i18n("模型是否带音高指导"),
                         choices=[i18n("是"), i18n("否")],
                         value=i18n("是"),
                         interactive=True,
-                        scale=0,
                     )
                     version_2 = gr.Radio(
                         label=i18n("模型版本型号"),
                         choices=["v1", "v2"],
                         value="v2",
                         interactive=True,
-                        scale=0,
                     )
                 with gr.Row():
                     name_to_save0 = gr.Textbox(
@@ -1544,7 +1544,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                         interactive=True,
                     )
                     but6 = gr.Button(i18n("融合"), variant="primary")
-                    info4 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8, auto_scroll=True)
+                    info4 = gr.Textbox(label=i18n("输出信息"), value="", max_lines=8, autoscroll=True)
                 but6.click(
                     merge4,
                     [
