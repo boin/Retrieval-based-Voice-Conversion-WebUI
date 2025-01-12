@@ -832,13 +832,13 @@ def update_mix_name(
     """
     name = ""
     if ckpt1:
-        name += f"{ckpt1.split('_')[-1]}_{alpha1}_"
+        name += f"{ckpt1.split('_')[-1]}{alpha1},"
     if ckpt2:
-        name += f"{ckpt2.split('_')[-1]}_{alpha2}_"
+        name += f"{ckpt2.split('_')[-1]}{alpha2},"
     if ckpt3:
-        name += f"{ckpt3.split('_')[-1]}_{alpha3}_"
+        name += f"{ckpt3.split('_')[-1]}{alpha3},"
     if ckpt4:
-        name += f"{ckpt4.split('_')[-1]}_{alpha4}_"
+        name += f"{ckpt4.split('_')[-1]}{alpha4},"
     return name[:-1]
 
 
