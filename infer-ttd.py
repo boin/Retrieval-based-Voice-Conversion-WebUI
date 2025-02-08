@@ -874,10 +874,15 @@ with gr.Blocks(title="RVC WebUI") as app:
                 with gr.Group():
                     with gr.Row():
                         with gr.Column():
-                            vc_transform0 = gr.Number(
-                                label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"),
-                                value=0,
-                            )
+                            with gr.Row():
+                                vc_transform0 = gr.Number(
+                                    label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"),
+                                    value=0,
+                                )
+                                vc_loudnorm0 = gr.Checkbox(
+                                    label=i18n("是否开启loudnorm -23 LUFS"),
+                                    value=True,
+                                )
                             input_audio0 = gr.File(
                                 label=i18n(
                                     "输入待处理音频文件路径(默认是正确格式示例)"
@@ -998,6 +1003,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                                 resample_sr0,
                                 rms_mix_rate0,
                                 protect0,
+                                vc_loudnorm0,
                             ],
                             [vc_output1, vc_output2],
                             api_name="infer_convert",
@@ -1010,10 +1016,15 @@ with gr.Blocks(title="RVC WebUI") as app:
                 )
                 with gr.Row():
                     with gr.Column():
-                        vc_transform1 = gr.Number(
-                            label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"),
-                            value=0,
-                        )
+                        with gr.Row():
+                            vc_transform1 = gr.Number(
+                                label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"),
+                                value=0,
+                            )
+                            vc_loudnorm1 = gr.Checkbox(
+                                label=i18n("是否loudnorm -23 LUFS"),
+                                value=True,
+                            )
                         opt_input = gr.Textbox(
                             label=i18n("指定输出文件夹"), value="opt"
                         )
@@ -1137,6 +1148,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                             rms_mix_rate1,
                             protect1,
                             format1,
+                            vc_loudnorm1,
                         ],
                         [vc_output3],
                         api_name="infer_convert_batch",

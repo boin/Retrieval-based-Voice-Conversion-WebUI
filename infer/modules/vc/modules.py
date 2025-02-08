@@ -157,6 +157,7 @@ class VC:
         resample_sr,
         rms_mix_rate,
         protect,
+        loudnorm,
     ):
         if input_audio_path is None:
             return "You need to upload an audio", None
@@ -206,6 +207,7 @@ class VC:
                 self.version,
                 protect,
                 f0_file,
+                loudnorm,
             )
             if self.tgt_sr != resample_sr >= 16000:
                 tgt_sr = resample_sr
@@ -242,6 +244,7 @@ class VC:
         rms_mix_rate,
         protect,
         format1,
+        loudnorm1,
     ):
         try:
             dir_path = (
@@ -272,6 +275,7 @@ class VC:
                     resample_sr,
                     rms_mix_rate,
                     protect,
+                    loudnorm1
                 )
                 path = path["orig_name"].removesuffix(".wav") + "_VC"
                 if "Success" in info:
