@@ -16,6 +16,18 @@ services:
         volume:
           nocopy: true
           subpath: 04_应用/rvc-web/weights
+      - type: volume # 模型index路径
+        source: TTD
+        target: /app/assets/indices
+        volume:
+          nocopy: true
+          subpath: 04_应用/rvc-web/indices
+      - type: volume # 模型logs路径
+        source: TTD
+        target: /app/logs
+        volume:
+          nocopy: true
+          subpath: 04_应用/rvc-web/logs
       - type: volume # 批量infer的输入路径
         source: TTD
         target: /app/material
