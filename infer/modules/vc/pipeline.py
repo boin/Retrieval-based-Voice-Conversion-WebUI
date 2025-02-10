@@ -17,7 +17,7 @@ import torch
 import torch.nn.functional as F
 import torchcrepe
 from scipy import signal
-from tools.postprocess import eq, loudnorm
+from tools.postprocess import loudnorm as ln
 
 now_dir = os.getcwd()
 sys.path.append(now_dir)
@@ -299,7 +299,7 @@ class Pipeline(object):
         version,
         protect,
         f0_file=None,
-        loudnorm1=True,
+        loudnorm=-23,
     ):
         if (
             file_index != ""
@@ -448,9 +448,9 @@ class Pipeline(object):
             audio_opt = librosa.resample(
                 audio_opt, orig_sr=tgt_sr, target_sr=resample_sr
             )
-        if loudnorm1:
-            audio_opt, lufs = loudnorm(audio_opt, resample_sr)
-            logger.info(f"normalized audio_opt from {lufs:.2f} LUFS to 23 LUFS")
+        if loudnorm != 0:
+            audio_opt, lufs = ln(audio_opt, resample_sr, loudnorm)
+            logger.info(f"normalized audio_opt from {lufs:.2f} LUFS to {loudnorm} LUFS")
         audio_max = np.abs(audio_opt).max() / 0.99
         max_int16 = 32768
         if audio_max > 1:

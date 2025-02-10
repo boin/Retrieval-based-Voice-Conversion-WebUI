@@ -3,7 +3,7 @@ import pyloudnorm as pyln
 import scipy.signal as signal
 
 
-def loudnorm(wav_data: np.ndarray, sr: int) -> tuple[np.ndarray, float]:
+def loudnorm(wav_data: np.ndarray, sr: int, target_loudness: float = -23) -> tuple[np.ndarray, float]:
     """
     Loudness normalization (LUFS).
 
@@ -13,12 +13,14 @@ def loudnorm(wav_data: np.ndarray, sr: int) -> tuple[np.ndarray, float]:
         Input audio data. (float)
     sr : int
         Sampling rate. (int)
+    target_loudness : float
+        Target loudness. (float) default: -23
     """
     # measure the loudness first
     meter = pyln.Meter(sr)  # create BS.1770 meter
-    loudness: float = meter.integrated_loudness(wav_data)
-    # loudness normalize audio to -23 dB LUFS
-    return pyln.normalize.loudness(wav_data, loudness, -23.0), loudness
+    original_loudness: float = meter.integrated_loudness(wav_data)
+    # loudness normalize audio to target_loudness dB LUFS
+    return pyln.normalize.loudness(wav_data, original_loudness, target_loudness), original_loudness
 
 
 def eq(wav_data: np.ndarray, sr: int) -> np.ndarray:
@@ -59,3 +61,22 @@ def eq(wav_data: np.ndarray, sr: int) -> np.ndarray:
     # 输出为float64格式
     enhanced_audio = np.clip(enhanced_audio, -1.0, 1.0)  # 限制音频信号在[-1, 1]之间
     return enhanced_audio
+
+def limiter(data: np.ndarray, threshold: float = 0.99) -> np.ndarray:
+    """
+    Apply a simple limiter to the audio data.
+    
+    Parameters:
+    - data: NumPy array of audio data (float)
+    - threshold: The threshold level for the limiter (linear scale, e.g., 0.99 for -0.1 dB)
+    
+    Returns:
+    - Limited audio data as a NumPy array (float)
+    """
+    # Calculate the gain reduction factor
+    reduction_factor = np.where(np.abs(data) > threshold, threshold / np.abs(data), 1.0)
+    
+    # Apply the gain reduction to the audio signal
+    limited_audio = data * reduction_factor
+    
+    return limited_audio

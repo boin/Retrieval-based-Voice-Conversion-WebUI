@@ -879,9 +879,11 @@ with gr.Blocks(title="RVC WebUI") as app:
                                     label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"),
                                     value=0,
                                 )
-                                vc_loudnorm0 = gr.Checkbox(
-                                    label=i18n("是否开启loudnorm -23 LUFS"),
-                                    value=True,
+                                vc_loudnorm0 = gr.Number(
+                                    label=i18n("loudnorm到指定的LUFS（0为不调整）"),
+                                    value=-23,
+                                    minimum=-100,
+                                    maximum=0,
                                 )
                             input_audio0 = gr.File(
                                 label=i18n(
@@ -1021,9 +1023,11 @@ with gr.Blocks(title="RVC WebUI") as app:
                                 label=i18n("变调(整数, 半音数量, 升八度12降八度-12)"),
                                 value=0,
                             )
-                            vc_loudnorm1 = gr.Checkbox(
-                                label=i18n("是否loudnorm -23 LUFS"),
-                                value=True,
+                            vc_loudnorm1 = gr.Number(
+                                    label=i18n("loudnorm到指定的LUFS（0为不调整）"),
+                                    value=-23,
+                                    minimum=-100,
+                                    maximum=0,
                             )
                         opt_input = gr.Textbox(
                             label=i18n("指定输出文件夹"), value="opt"
