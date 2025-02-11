@@ -881,7 +881,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                                 )
                                 vc_loudnorm0 = gr.Number(
                                     label=i18n("loudnorm到指定的LUFS（0为不调整）"),
-                                    value=-23,
+                                    value=-26,
                                     minimum=-100,
                                     maximum=0,
                                 )
@@ -1025,7 +1025,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                             )
                             vc_loudnorm1 = gr.Number(
                                     label=i18n("loudnorm到指定的LUFS（0为不调整）"),
-                                    value=-23,
+                                    value=-26,
                                     minimum=-100,
                                     maximum=0,
                             )
