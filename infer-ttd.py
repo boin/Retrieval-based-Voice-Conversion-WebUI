@@ -134,7 +134,7 @@ names = []
 for name in os.listdir(weight_root):
     if name.endswith(".pth"):
         names.append(name)
-index_paths = []
+index_paths = [""]
 
 
 def lookup_indices(index_root):
@@ -932,7 +932,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                                 label=i18n(
                                     "输入源音量包络替换输出音量包络融合比例，越靠近1越使用输出包络"
                                 ),
-                                value=0.25,
+                                value=1,
                                 interactive=True,
                             )
                             protect0 = gr.Slider(
@@ -959,7 +959,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                                 minimum=0,
                                 maximum=1,
                                 label=i18n("检索特征占比"),
-                                value=0.75,
+                                value=1,
                                 interactive=True,
                             )
                             f0_file = gr.File(
