@@ -158,7 +158,7 @@ def change_choices():
     for name in os.listdir(weight_root):
         if name.endswith(".pth"):
             names.append(name)
-    index_paths = []
+    index_paths = [""]
     for root, dirs, files in os.walk(index_root, topdown=False):
         for name in files:
             if name.endswith(".index") and "trained" not in name:
