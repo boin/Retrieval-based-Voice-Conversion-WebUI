@@ -18,7 +18,10 @@ def loudnorm(wav_data: np.ndarray, sr: int, target_loudness: float = -23) -> tup
     """
     # measure the loudness first
     meter = pyln.Meter(sr)  # create BS.1770 meter
-    original_loudness: float = meter.integrated_loudness(wav_data)
+    try:
+        original_loudness: float = meter.integrated_loudness(wav_data)
+    except:
+        return wav_data, target_loudness # if failed, return original audio
     # loudness normalize audio to target_loudness dB LUFS
     return pyln.normalize.loudness(wav_data, original_loudness, target_loudness), original_loudness
 
