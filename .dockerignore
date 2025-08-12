@@ -1,0 +1,33 @@
+# Python 虚拟环境
+venv/
+.env/
+__pycache__/
+*.pyc
+
+# Conda 环境文件夹
+.conda/
+conda_env/
+
+# 日志和输出
+logs/*
+opt/*
+
+# Jupyter 临时文件
+.ipynb_checkpoints/
+
+# 版本管理
+.git/
+.gitignore
+
+# 依赖和缓存
+node_modules/
+dist/
+build/
+
+# 其他常见目录/文件
+assets/*
+assets-remote/*
+docs/*
+tmp/
+*.log
+.DS_Store

@@ -12,6 +12,7 @@ from i18n.i18n import I18nAuto
 from configs.config import Config
 from sklearn.cluster import MiniBatchKMeans
 import torch, platform
+import httpx
 import numpy as np
 import gradio as gr
 import faiss
@@ -129,6 +130,7 @@ weight_root = os.getenv("weight_root")
 weight_uvr5_root = os.getenv("weight_uvr5_root")
 index_root = os.getenv("index_root")
 outside_index_root = os.getenv("outside_index_root")
+RVC_SERVER_URL = "http://ttd-stage:7866"
 
 names = []
 for name in os.listdir(weight_root):
@@ -187,6 +189,19 @@ def change_mix_choices():
 
 def clean():
     return {"value": "", "__type__": "update"}
+
+
+def clear_rvc_cache():
+    try:
+        url = f"{RVC_SERVER_URL.rstrip('/')}/api/v1/cache/clear"
+        with httpx.Client(timeout=10.0) as client:
+            resp = client.post(url)
+            if resp.status_code == 200:
+                return i18n("已清空RVC服务缓存")
+            return i18n(f"清空失败: {resp.status_code} {resp.text}")
+    except Exception as e:
+        logger.exception("clear_rvc_cache failed")
+        return i18n(f"清空失败: {e}")
 
 
 def export_onnx(ModelPath, ExportedPath):
@@ -854,10 +869,10 @@ with gr.Blocks(title="RVC WebUI") as app:
             with gr.Row():
                 sid0 = gr.Dropdown(label=i18n("推理音色"), choices=sorted(names))
                 with gr.Column():
-                    refresh_button = gr.Button(
-                        i18n("刷新音色列表和索引路径"), variant="primary"
-                    )
-                    clean_button = gr.Button(i18n("卸载音色省显存"), variant="primary")
+                    refresh_button = gr.Button(i18n("刷新音色列表和索引路径"), variant="primary")
+                    with gr.Row():
+                        clean_button = gr.Button(i18n("卸载音色省显存"), variant="primary")
+                        clear_cache_button = gr.Button(i18n("清空模型缓存(训练前点我)"), variant="secondary")
                 spk_item = gr.Slider(
                     minimum=0,
                     maximum=2333,
@@ -1010,6 +1025,7 @@ with gr.Blocks(title="RVC WebUI") as app:
                             [vc_output1, vc_output2],
                             api_name="infer_convert",
                         )
+                        clear_cache_button.click(fn=clear_rvc_cache, inputs=[], outputs=[vc_output1])
             with gr.TabItem(i18n("批量推理")):
                 gr.Markdown(
                     value=i18n(

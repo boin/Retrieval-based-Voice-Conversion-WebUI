@@ -68,6 +68,19 @@ services:
             - driver: nvidia
               device_ids: [ "1" ]
               capabilities: [ gpu ]
+  rvc-api:
+    container_name: "rvc-api"
+    extends: rvc-base
+    ports: !override
+      - "7866:7866"
+    command: ["python3", "api.py"]
+    deploy: !override
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: [ "1" ]
+              capabilities: [ gpu ]
 
 volumes:
   TTD-Data:
