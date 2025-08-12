@@ -1,6 +1,5 @@
 # Python 虚拟环境
 venv/
-.env/
 __pycache__/
 *.pyc
 
@@ -18,6 +17,9 @@ opt/*
 # 版本管理
 .git/
 .gitignore
+.github
+.vscode
+.dockerignore
 
 # 依赖和缓存
 node_modules/
