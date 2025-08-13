@@ -105,12 +105,11 @@ def _scan_models() -> List[str]:
     if not weight_root or not os.path.isdir(weight_root):
         return []
     models: List[str] = []
-    for root, _dirs, files in os.walk(weight_root):
-        for fname in files:
-            if fname.endswith(".pth") and not fname.startswith("._") and fname != ".DS_Store":
-                full = os.path.join(root, fname)
-                rel = os.path.relpath(full, weight_root)
-                models.append(rel)
+    # 取weight_root根目录下的非隐藏的.pth文件
+    for fname in os.listdir(weight_root):
+        full = os.path.join(weight_root, fname)
+        if (os.path.isfile(full) and fname.endswith(".pth") and not fname.startswith(".")):
+            models.append(fname)
     return sorted(models)
 
 
@@ -122,7 +121,7 @@ def _scan_indices() -> List[str]:
             continue
         for root, _dirs, files in os.walk(base, topdown=False):
             for name in files:
-                if name.endswith(".index") and "trained" not in name:
+                if name.endswith(".index") and "trained" not in name and not name.startswith("."):
                     indices.append(os.path.join(root, name))
     # de-dup and sort with empty first
     uniq = []
