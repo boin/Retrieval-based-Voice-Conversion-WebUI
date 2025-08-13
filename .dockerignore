@@ -13,6 +13,7 @@ opt/*
 
 # Jupyter 临时文件
 .ipynb_checkpoints/
+*.ipynb
 
 # 版本管理
 .git/
