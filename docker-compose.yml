@@ -57,18 +57,18 @@ services:
             - driver: nvidia
               device_ids: [ "0" ]
               capabilities: [ gpu ]
-  rvc-gpu:
-    container_name: "rvc-p5000"
-    extends: rvc-base
-    ports: !override
-      - "7868:7865"
-    deploy: !override
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: [ "1" ]
-              capabilities: [ gpu ]
+  # rvc-gpu:
+  #   container_name: "rvc-p5000"
+  #   extends: rvc-base
+  #   ports: !override
+  #     - "7868:7865"
+  #   deploy: !override
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             device_ids: [ "1" ]
+  #             capabilities: [ gpu ]
   rvc-api:
     container_name: "rvc-api"
     extends: rvc-base
