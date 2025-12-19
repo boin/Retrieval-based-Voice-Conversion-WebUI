@@ -17,7 +17,7 @@ import torch
 import torch.nn.functional as F
 import torchcrepe
 from scipy import signal
-from tools.postprocess import loudnorm as ln
+from ttd_fastapi_utils.postprocess import loudnorm as ln
 
 now_dir = os.getcwd()
 sys.path.append(now_dir)

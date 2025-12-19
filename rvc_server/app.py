@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 from configs.config import Config
 from .registry import LRURegistry
+from ttd_fastapi_utils import setup_cuda_health
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +50,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="RVC FastAPI Service", version="0.1.0", lifespan=lifespan)
+setup_cuda_health(app)
 
 # load env for local dev
 load_dotenv()
@@ -83,11 +85,6 @@ _registry = LRURegistry(
     ttl_seconds=int(os.getenv("RVC_MODEL_TTL", 1800)),  # default 30 minutes
     hubert_provider=_hubert_provider,
 )
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
 
 
 @app.post("/api/v1/cache/clear")
