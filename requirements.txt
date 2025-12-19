@@ -51,3 +51,4 @@ av
 torch==2.5.1
 torchaudio==2.5.1
 pyloudnorm
+ttd_fastapi_utils>=0.2.3

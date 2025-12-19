@@ -36,8 +36,7 @@ RUN aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co
 #mount requirements.txt for best cache result
 RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \   
     python3 -m pip install --upgrade pip==24.0 && \
-    python3 -m pip install --no-cache-dir -r /tmp/requirements.txt && \
-    python3 -m pip install --no-cache-dir 'ttd_fastapi_utils>=0.2.2' --extra-index-url http://pypi-server/simple/ --trusted-host pypi-server
+    python3 -m pip install --no-cache-dir -r /tmp/requirements.txt --extra-index-url http://pypi-server/simple/ --trusted-host pypi-server
 
 VOLUME [ "/app/weights", "/app/opt" ]
 
