@@ -55,28 +55,6 @@ setup_cuda_health(app)
 # load env for local dev
 load_dotenv()
 
-# reduce access log noise for /health and /docs
-class UvicornPathFilter(logging.Filter):
-    def filter(self, record: logging.LogRecord) -> bool:
-        try:
-            # uvicorn.access uses: "%s - \"%s %s HTTP/%s\" %d"
-            args = record.args
-            if not args or len(args) < 5:
-                return True
-            method = args[1]
-            path = args[2]
-            if isinstance(path, bytes):
-                path = path.decode(errors="ignore")
-            if path in ("/health", "/docs", "/openapi.json"):
-                return False
-        except Exception:
-            # never break logging
-            return True
-        return True
-
-logging.getLogger("uvicorn.access").addFilter(UvicornPathFilter())
-
-
 # create global config and registry
 _config = Config()
 _registry = LRURegistry(
