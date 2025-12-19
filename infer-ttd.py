@@ -5,29 +5,6 @@ from dotenv import load_dotenv
 now_dir = os.getcwd()
 sys.path.append(now_dir)
 load_dotenv()
-
-try:
-    from gradio_client import utils as _gradio_client_utils
-
-    if not getattr(_gradio_client_utils, "_rvc_bool_schema_patch_v2", False):
-        _orig_get_type = _gradio_client_utils.get_type
-        _orig_json_schema_to_python_type = _gradio_client_utils._json_schema_to_python_type
-
-        def _patched_get_type(schema):
-            if isinstance(schema, bool):
-                return "Any"
-            return _orig_get_type(schema)
-
-        def _patched_json_schema_to_python_type(schema, defs):
-            if isinstance(schema, bool):
-                return "Any"
-            return _orig_json_schema_to_python_type(schema, defs)
-
-        _gradio_client_utils.get_type = _patched_get_type
-        _gradio_client_utils._json_schema_to_python_type = _patched_json_schema_to_python_type
-        _gradio_client_utils._rvc_bool_schema_patch_v2 = True
-except Exception:
-    pass
 from infer.modules.vc.modules import VC
 from infer.modules.uvr5.modules import uvr
 from infer.lib.train.process_ckpt import merge4
