@@ -1,0 +1,102 @@
+---
+# ==============================================================================
+# 阶段 1: CI 构建与推送 (运行在 localhost，通过 delegate_to 操作构建机)
+# ==============================================================================
+- name: CI Build & Push
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    # 项目定义
+    ci_project_name: "rvc-web"
+    ci_project_path: "/workspace/rvc-web"
+    ci_build_host: "ttd-nest"  # 专用构建机
+    ci_build_host_rsync: "root@ttd-nest"
+    ci_registry_url: "registry.ttd"
+    
+    # 镜像定义
+    ci_image_name: "app"
+    ci_image_tag: "latest"
+    ci_dockerfile_path: "{{ ci_project_path }}/Dockerfile"
+    ci_compose_file_path: "{{ ci_project_path }}/docker-compose.yml"
+    
+    ci_task: "build"
+
+    # 同步配置 (pkg)
+    rsync_opts:
+      # --- 排除巨大文件夹 ---
+      - "--exclude=.conda/"
+      - "--exclude=venv/"
+      - "--exclude=.git/"
+      - "--exclude=assets/"
+      - "--exclude=assets-remote/"
+      - "--exclude=logs/"
+      - "--exclude=TEMP/"
+      - "--exclude=__pycache__/"
+      - "--exclude=opt/"
+      - "--exclude=*.log"
+
+  pre_tasks:
+    - name: Debug paths
+      debug:
+        msg: 
+          - "Project Path: {{ ci_project_path }}"
+          - "Dockerfile Path: {{ ci_dockerfile_path }}"
+
+  roles:
+    # 调用通用 Role 执行 Sync + Build + Push
+    - role: /workspace/z/ansible/roles/docker_ci_cd
+
+  post_tasks:
+    # 关键：将 CI 生成的带 Hash Tag 的 Compose 内容保存到 hostvars，供 CD 阶段使用
+    - name: 保存 Compose 内容供 CD 使用
+      set_fact:
+        final_compose_content: "{{ ci_compose_content }}"
+      tags: [ci]
+
+# ==============================================================================
+# 阶段 2: CD 部署 (运行在目标机器)
+# ==============================================================================
+- name: Deploy to Target
+  hosts: "{{ target_host | default('staging') }}"
+  gather_facts: false
+  tags: [deploy]
+  vars:
+    project_root: "/opt/rvc-web"
+    # 从 CI Play 获取生成的 Compose 内容
+    compose_content: "{{ hostvars['localhost']['final_compose_content'] }}"
+
+  tasks:
+    - name: 收集目标机 facts（仅 deploy 阶段）
+      setup:
+      tags: [deploy]
+
+    - name: 创建部署目录
+      file:
+        path: "{{ project_root }}"
+        state: directory
+        owner: root
+        mode: '0755'
+      tags: [deploy]
+
+    - name: 写入替换镜像后的 compose.yaml
+      copy:
+        content: "{{ compose_content }}"
+        dest: "{{ project_root }}/docker-compose.yml"
+      register: compose_config
+      tags: [deploy]
+
+    - name: 拉取镜像 (利用 compose pull)
+      command: docker compose pull
+      args:
+        chdir: "{{ project_root }}"
+      when: compose_config.changed or force_pull | default(false)
+      tags: [deploy]
+
+    - name: 启动服务 (Up)
+      command: docker compose up -d --remove-orphans
+      args:
+        chdir: "{{ project_root }}"
+      environment:
+        COMPOSE_FILE: docker-compose.yml
+      tags: [deploy]

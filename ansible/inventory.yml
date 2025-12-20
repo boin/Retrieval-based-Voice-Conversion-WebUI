@@ -1,0 +1,13 @@
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+    ttd-nest:
+      ansible_host: ttd-nest
+      ansible_user: root
+      ansible_connection: ssh
+  children:
+    prod:
+      hosts:
+        production:
+          ansible_host: ttd-stage

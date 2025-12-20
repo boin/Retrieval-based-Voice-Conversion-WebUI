@@ -1,7 +1,7 @@
 services:
   rvc-base:
-    build: .
-    image: rvc-web:latest
+    # build: .
+    image: rvc-web/app:latest
     container_name: rvc-3070
     volumes:
       - type: volume # 预加载模型缓存路径

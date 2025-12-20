@@ -16,11 +16,13 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && \
     apt-get install -y build-essential python-dev python3-dev python3.9-distutils python3.9-dev python3.9 curl && \
     apt-get clean && \
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 && \
-    curl https://bootstrap.pypa.io/get-pip.py | python3.9
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.9 get-pip.py pip==24.0 && rm get-pip.py
 
 # Set Python 3.9 as the default
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
 
 WORKDIR /app
 
@@ -34,12 +36,11 @@ RUN aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co
 RUN aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/rmvpe.pt -d assets/rmvpe -o rmvpe.pt
 
 #mount requirements.txt for best cache result
-RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \   
-    python3 -m pip install --upgrade pip==24.0 && \
-    python3 -m pip install --no-cache-dir -r /tmp/requirements.txt --extra-index-url http://pypi-server/simple/ --trusted-host pypi-server
+RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
+    python3.9 -m pip install --ignore-installed --no-cache-dir -r /tmp/requirements.txt --extra-index-url http://pypi-server/simple/ --trusted-host pypi-server
 
 VOLUME [ "/app/weights", "/app/opt" ]
 
 COPY . /app
 
-CMD ["python3", "infer-ttd.py"]
+CMD ["python3.9", "infer-ttd.py"]
